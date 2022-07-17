@@ -55,8 +55,14 @@ const userController = {
   editUser: async (req, res, next) => {
     try {
       const foundUser = await User.findByPk(req.params.id, { raw: true })
+      const currentUser = req.user
       if (!foundUser) throw new Error('User is not exist')
-      res.render('users/edit', { user: foundUser })
+      if (foundUser.id === currentUser.id) {
+        res.render('users/edit', { user: foundUser })
+      } else {
+        req.flash('error_messages', '不可編輯他人檔案')
+        res.redirect(`/users/${req.params.id}`)
+      }
     } catch (error) { next(error) }
   },
   putUser: async (req, res, next) => {
