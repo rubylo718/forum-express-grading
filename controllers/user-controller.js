@@ -55,21 +55,8 @@ const userController = {
   editUser: async (req, res, next) => {
     try {
       const foundUser = await User.findByPk(req.params.id, { raw: true })
-      const currentUser = req.user
       if (!foundUser) throw new Error('User is not exist')
-      if (foundUser.id === currentUser.id) {
-        res.render('users/edit', { user: foundUser })
-        // 1 failing
-        // 1) # R03
-        //      # R03: 建立 User Profile
-        //        # [瀏覽編輯 Profile 頁面]
-        //           GET /users/:id/edit :
-        //    TypeError: Cannot read properties of null (reading 'args')
-        //     at Context.<anonymous> (tests/R03.test.js:89:30)
-      } else {
-        req.flash('error_messages', '不可編輯他人檔案')
-        res.redirect(`/users/${req.params.id}`)
-      }
+      res.render('users/edit', { user: foundUser })
     } catch (error) { next(error) }
   },
   putUser: async (req, res, next) => {
