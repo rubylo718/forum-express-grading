@@ -3,7 +3,7 @@ if (process.env.NODE_ENV !== 'production') {
 }
 const express = require('express')
 const handlebars = require('express-handlebars')
-const routes = require('./routes')
+const { pages } = require('./routes')
 const path = require('path')
 const flash = require('connect-flash')
 const methodOverride = require('method-override')
@@ -40,7 +40,7 @@ app.use((req, res, next) => {
   next()
 })
 
-app.use(routes)
+app.use(pages)
 
 app.listen(port, () => {
   console.info(`Example app listening on port ${port}!`)
