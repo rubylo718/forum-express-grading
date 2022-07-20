@@ -1,10 +1,17 @@
-const { Restaurant, User, Category } = require('../../models')
-const { imgurFileHandler } = require('../../helpers/file-helpers')
-const adminServices = require('../../services/admin-services')
+const { Restaurant, User, Category } = require('../models')
+const { imgurFileHandler } = require('../helpers/file-helpers')
 
-const adminController = {
-  getRestaurants: (req, res, next) => {
-    adminServices.getRestaurants(req, (err, data) => err ? next(err) : res.render('admin/restaurants', data))
+const adminServices = {
+  getRestaurants: (req, cb) => {
+    Restaurant.findAll({
+      raw: true,
+      nest: true,
+      include: [Category]
+    })
+      .then(restaurants => {
+        return cb(null, { restaurants })
+      })
+      .catch(err => cb(err))
   },
   getRestaurant: (req, res, next) => {
     Restaurant.findByPk(req.params.id, { // 去資料庫用 id 找一筆資料
@@ -125,4 +132,4 @@ const adminController = {
     }
   }
 }
-module.exports = adminController
+module.exports = adminServices

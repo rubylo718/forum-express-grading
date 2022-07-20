@@ -4,7 +4,7 @@ const adminServices = require('../../services/admin-services')
 
 const adminController = {
   getRestaurants: (req, res, next) => {
-    adminServices.getRestaurants(req, (err, data) => err ? next(err) : res.render('admin/restaurants', data))
+    adminServices.getRestaurants(req, (err, data) => err ? next(err) : res.json(data))
   },
   getRestaurant: (req, res, next) => {
     Restaurant.findByPk(req.params.id, { // 去資料庫用 id 找一筆資料
