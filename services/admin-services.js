@@ -32,7 +32,7 @@ const adminServices = {
       .then(categories => res.render('admin/create-restaurant', { categories }))
       .catch(err => next(err))
   },
-  postRestaurant: (req, res, next) => {
+  postRestaurant: (req, cb) => {
     const { name, tel, address, openingHours, description, categoryId } = req.body
     if (!name) throw new Error('Restaurant name is required!')
     const { file } = req
@@ -46,11 +46,8 @@ const adminServices = {
         image: filePath || null,
         categoryId
       }))
-      .then(() => {
-        req.flash('success_messages', 'restaurant was successfully created')
-        res.redirect('/admin/restaurants')
-      })
-      .catch(err => next(err))
+      .then(newRestaurant => cb(null, { restaurant: newRestaurant }))
+      .catch(err => cb(err))
   },
   editRestaurant: (req, res, next) => { // 新增這段
     Promise.all([
